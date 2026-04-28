@@ -1,0 +1,72 @@
+[
+    {
+        "label": "os,",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os.",
+        "description": "os.",
+        "detail": "os.",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "deque",
+        "importPath": "collections",
+        "description": "collections",
+        "isExtraImport": true,
+        "detail": "collections",
+        "documentation": {}
+    },
+    {
+        "label": "chat_ollama",
+        "kind": 2,
+        "importPath": "chatbot",
+        "description": "chatbot",
+        "peekOfCode": "def chat_ollama(model, messages):\n    payload = {\"model\": model, \"messages\": messages, \"stream\": False}\n    try:\n        r = requests.post(OLLAMA_URL, json=payload, timeout=120)\n        r.raise_for_status()\n        return r.json()[\"message\"][\"content\"]\n    except requests.exceptions.ConnectionError:\n        return \"[ERROR] Ollama not running. Start with: ollama serve\"\n    except Exception as e:\n        return f\"[ERROR] {e}\"",
+        "detail": "chatbot",
+        "documentation": {}
+    },
+    {
+        "label": "run_cli",
+        "kind": 2,
+        "importPath": "chatbot",
+        "description": "chatbot",
+        "peekOfCode": "def run_cli(model=\"mistral\", max_history=20):\n    history = [{\"role\":\"system\",\"content\":SYSTEM_PROMPT}]\n    log     = []\n    print(f\"\\n[Chatbot] Model: {model}  |  'clear' to reset  |  'save' to export  |  'q' to quit\\n\")\n    print(\"─\"*60)\n    while True:\n        try:\n            user_input = input(\"\\nYou: \").strip()\n        except (EOFError, KeyboardInterrupt):\n            break",
+        "detail": "chatbot",
+        "documentation": {}
+    },
+    {
+        "label": "run_web",
+        "kind": 2,
+        "importPath": "chatbot",
+        "description": "chatbot",
+        "peekOfCode": "def run_web(model=\"mistral\"):\n    try:\n        import gradio as gr\n    except ImportError:\n        print(\"[ERROR] pip install gradio\"); return\n    history_store = [{\"role\":\"system\",\"content\":SYSTEM_PROMPT}]\n    def respond(message, chat_history):\n        history_store.append({\"role\":\"user\",\"content\":message})\n        ctx = [history_store[0]] + history_store[max(1,len(history_store)-20):]\n        reply = chat_ollama(model, ctx)",
+        "detail": "chatbot",
+        "documentation": {}
+    },
+    {
+        "label": "OLLAMA_URL",
+        "kind": 5,
+        "importPath": "chatbot",
+        "description": "chatbot",
+        "peekOfCode": "OLLAMA_URL = \"http://localhost:11434/api/chat\"\nLOG_FILE   = os.path.join(\"logs\", f\"chat_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json\")\nSYSTEM_PROMPT = \"\"\"You are a helpful, friendly AI assistant with memory of the conversation.\nYou remember what the user has told you and refer back to it naturally.\nBe concise but thorough. If you don't know something, say so honestly.\"\"\"\ndef chat_ollama(model, messages):\n    payload = {\"model\": model, \"messages\": messages, \"stream\": False}\n    try:\n        r = requests.post(OLLAMA_URL, json=payload, timeout=120)\n        r.raise_for_status()",
+        "detail": "chatbot",
+        "documentation": {}
+    },
+    {
+        "label": "SYSTEM_PROMPT",
+        "kind": 5,
+        "importPath": "chatbot",
+        "description": "chatbot",
+        "peekOfCode": "SYSTEM_PROMPT = \"\"\"You are a helpful, friendly AI assistant with memory of the conversation.\nYou remember what the user has told you and refer back to it naturally.\nBe concise but thorough. If you don't know something, say so honestly.\"\"\"\ndef chat_ollama(model, messages):\n    payload = {\"model\": model, \"messages\": messages, \"stream\": False}\n    try:\n        r = requests.post(OLLAMA_URL, json=payload, timeout=120)\n        r.raise_for_status()\n        return r.json()[\"message\"][\"content\"]\n    except requests.exceptions.ConnectionError:",
+        "detail": "chatbot",
+        "documentation": {}
+    }
+]
